@@ -169,9 +169,6 @@
            88  ACCOUNT-NOT-FOUND              VALUE 'N'.
        01  WS-MATCHED-INDEX         PIC 9(4).
        01  WS-NEW-BALANCE           PIC S9(7)V99.
-       01  WS-AMOUNT-ZERO           PIC X(1) VALUE 'N'.
-           88  AMOUNT-IS-ZERO                 VALUE 'Y'.
-           88  AMOUNT-NOT-ZERO                VALUE 'N'.
        01  WS-REJECT-REASON         PIC X(8).
        
       ******************************************************************
@@ -271,39 +268,40 @@
       * Validate and Process Individual Transaction                   *
       ******************************************************************
        VALIDATE-AND-PROCESS-TXN.
-      *    Check if amount is zero or negative
+      *    Step 1: Check if amount is valid
            IF TXN-AMOUNT-IN = ZERO OR TXN-AMOUNT-IN < ZERO
                MOVE WS-REASON-BADAMT TO WS-REJECT-REASON
                PERFORM WRITE-REJECT
                EXIT PARAGRAPH
            END-IF
            
-      *    Find the account
+      *    Step 2: Find the account in our table
            PERFORM FIND-ACCOUNT
            
+      *    Step 3: Check if account exists
            IF ACCOUNT-NOT-FOUND
                MOVE WS-REASON-NOACCT TO WS-REJECT-REASON
                PERFORM WRITE-REJECT
                EXIT PARAGRAPH
            END-IF
            
-      *    Check if account is blocked
+      *    Step 4: Check if account is blocked
            IF WS-ACCT-STATUS(WS-MATCHED-INDEX) = WS-STATUS-BLOCKED
                MOVE WS-REASON-BLOCKED TO WS-REJECT-REASON
                PERFORM WRITE-REJECT
                EXIT PARAGRAPH
            END-IF
            
-      *    Apply transaction rules
+      *    Step 5: Apply the transaction (update balance)
            PERFORM APPLY-TXN-RULES.
        
       ******************************************************************
-      * Find Account in Table                                         *
+      * Find Account in Table - Simple linear search                  *
       ******************************************************************
        FIND-ACCOUNT.
            SET ACCOUNT-NOT-FOUND TO TRUE
-           SET WS-ACCT-IDX TO 1
            
+      *    Loop through all accounts until we find a match
            PERFORM VARYING WS-ACCT-IDX FROM 1 BY 1
                UNTIL WS-ACCT-IDX > WS-ACCOUNT-COUNT
                    OR ACCOUNT-FOUND
