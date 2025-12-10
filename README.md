@@ -60,11 +60,20 @@ The program follows a simple 3-step process:
 
 ## How to Run
 
+### Option 1: Python Simulator (Quick Test)
+```bash
+python test_simulator.py
+```
+This runs the same logic without needing a COBOL compiler. See `docs/LOCAL_TESTING.md` for details.
+
+### Option 2: Mainframe Environment
 1. Upload the COBOL source to your mainframe
 2. Update dataset names in the JCL file to match your system
 3. Upload the sample data files
 4. Submit the JCL job
 5. Check the output files for results
+
+See `docs/LOCAL_TESTING.md` for more options including GnuCOBOL.
 
 ## Key Features
 
