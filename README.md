@@ -6,6 +6,16 @@ A COBOL based card transaction processing system simulating real world banking l
 
 A card transaction processing system built for mainframe environments. This system processes card transactions against account master files, applies business rules, and generates updated account files, statements, and rejection reports.
 
+## Quick Explanation
+
+This is a batch processing program that simulates how banks process credit card transactions:
+
+- **Input**: A file of accounts and a file of transactions
+- **Process**: For each transaction, find the account, validate it, and update the balance
+- **Output**: Updated account balances, account statements, and a list of rejected transactions
+
+The program demonstrates core mainframe concepts: sequential file processing, batch logic, data validation, and error handling. It's straightforward enough to explain in an interview but shows understanding of real-world banking systems.
+
 ## Project Structure
 
 ```
